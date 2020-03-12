@@ -1,1 +1,1 @@
-export * from './stream-factory';
+export { default } from './stream-factory';

@@ -1,26 +1,32 @@
 import IStreamFactory from './i-stream-factory';
 import IStream from './i-stream';
+import createStreamFactory from './create-stream-factory';
+import { upperCaseOnEven, toggleCase, sort, shuffle } from './mappers';
 
-class StreamFactory implements IStreamFactory {
-  createFifthStream(fileName: string): IStream<string> {
-    throw 'Not implemented';
-  }
+type StreamFactory = (fileName: string) => IStream<string>;
 
-  createFirstStream(fileName: string): IStream<string> {
-    throw 'Not implemented';
-  }
+class StreamFactoryClass implements IStreamFactory {
+  readonly createFirstStream: StreamFactory = createStreamFactory();
 
-  createFourthStream(fileName: string): IStream<string> {
-    throw 'Not implemented';
-  }
+  readonly createSecondStream: StreamFactory = createStreamFactory({
+    preWriteMappers: [upperCaseOnEven],
+    postReadMappers: [toggleCase]
+  });
 
-  createSecondStream(fileName: string): IStream<string> {
-    throw 'Not implemented';
-  }
+  readonly createThirdStream: StreamFactory = createStreamFactory({
+    preWriteMappers: [sort],
+    postReadMappers: [shuffle]
+  });
 
-  createThirdStream(fileName: string): IStream<string> {
-    throw 'Not implemented';
-  }
+  readonly createFourthStream: StreamFactory = createStreamFactory({
+    preWriteMappers: [upperCaseOnEven, sort],
+    postReadMappers: [shuffle, toggleCase]
+  });
+
+  readonly createFifthStream: StreamFactory = createStreamFactory({
+    preWriteMappers: [sort, upperCaseOnEven],
+    postReadMappers: [toggleCase, shuffle]
+  });
 }
 
-export default StreamFactory;
+export default StreamFactoryClass;
